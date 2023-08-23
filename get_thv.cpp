@@ -13,7 +13,7 @@ GetValue::GetValue(const std::string& hex_value) {
     humidity = HexToDec(humidity_hex);
 
     std::string voltage_hex = hex_value.substr(voltage_hex_start, voltage_hex_length);
-    int voltage_dec = HexToDec(voltage_hex);
+    const int voltage_dec = HexToDec(voltage_hex);
     voltage = voltage_offset + (static_cast<float>(voltage_dec) * voltage_multiplier);
 }
 

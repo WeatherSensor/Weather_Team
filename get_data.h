@@ -36,7 +36,7 @@ inline std::string get_data(const std::string mac){                          // 
         data.erase(std::remove(data.begin(), data.end(), ' '), data.end());
     } catch (const std::exception& error) {
         std::cout << "Exception: " << error.what() << std::endl;
-        return "-1"; 
+        return "F"; 
     }
 
 	return data; // The cleaned data is returned as a `string`

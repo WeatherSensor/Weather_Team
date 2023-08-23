@@ -1,5 +1,5 @@
 #ifndef CONSTANTS_H 
-#define CONSTANTS_h
+#define CONSTANTS_H
 
 constexpr char gatt_tool_command[] = "gatttool -b ";
 constexpr char char_read_command[] = " --char-read -a 0x006e";
