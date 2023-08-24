@@ -2,6 +2,7 @@
 Here Is Team Project of EC 2023
 
 Here's an overview of how the project will work
+
 1- Hardware Setup:
 
 2- Data Collection:
