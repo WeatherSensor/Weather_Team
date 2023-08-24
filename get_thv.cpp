@@ -1,7 +1,7 @@
 #include "get_thv.h"
 #include "constants.h" 
 
-GetValue::GetValue(const std::string& hex_value) {
+SensorData::SensorData(const std::string& hex_value) {
     std::string temperature_hex = hex_value.substr(temperature_hex_start, temperature_hex_length);
     int temperature_dec = HexToDec(temperature_hex);
     if (temperature_dec > max_int) {
@@ -17,15 +17,15 @@ GetValue::GetValue(const std::string& hex_value) {
     voltage = voltage_offset + (static_cast<float>(voltage_dec) * voltage_multiplier);
 }
 
-float GetValue::getTemperature() const {
+float SensorData::getTemperature() const {
     return temperature;
 }
 
-float GetValue::getHumidity() const {
+float SensorData::getHumidity() const {
     return humidity;
 }
 
-float GetValue::getVoltage() const {
+float SensorData::getVoltage() const {
     return voltage;
 }
 

@@ -13,7 +13,7 @@ inline std::string get_data(const std::string mac){                          // 
     // the output of the command
 
     if (fp == nullptr) {                                        // The code checks if the fp (file pointer) is valid If it's not, an error message is printed
-        std::cout << "Failed to execute command." << std::endl; // and the function returns the string "F"
+        std::cerr << "Failed to execute command." << std::endl; // and the function returns the string "F"
         return "F"; 
     }   
 
@@ -33,7 +33,7 @@ inline std::string get_data(const std::string mac){                          // 
     std::string data = "";
 
     if (pos == std::string::npos) {
-        std::cout << "Colon ':' character not found in data." << std::endl;
+        std::cerr << "The Program Failed To Connect To The Sensor" << std::endl;
         return "F";
     }
 
@@ -43,7 +43,7 @@ inline std::string get_data(const std::string mac){                          // 
 
     int status = pclose(fp);                               // Closing the file pointer
     if (status != 0) {
-        std::cout << "Failed to close pipe or command failed." << std::endl;
+        std::cerr << "Failed to close pipe or command failed." << std::endl;
         return "F";
     }
     

@@ -3,9 +3,9 @@
 
 #include "hex_to_dec.h"
 
-class GetValue {
+class SensorData {
     public:
-        GetValue(const std::string& hex_value);
+        SensorData(const std::string& hex_value);
 
         float getTemperature() const;
         float getHumidity() const;
