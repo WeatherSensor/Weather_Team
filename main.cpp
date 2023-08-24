@@ -12,16 +12,16 @@ int main(int argc, char *argv[]) {
 
     std::string mac_address = argv[2];
     int max_temp = std::stoi(argv[3]);
-    int min_temp = std::stoi(argv[4]);
+    int  min_temp = std::stoi(argv[4]);
     int intervalInSeconds = std::stoi(argv[5]);
-    signal(SIGINT, SIG_IGN); // Ignore the SIGTSTP signal
+    signal(SIGTSTP, SIG_IGN); // Ignore the SIGTSTP signal
 
     if (gpioInitialise() < 0) {
         std::cerr << "Failed to initialize pigpio" << std::endl;
         return -1;
     }
 
-    setInterval([&](const std::string& mac_address, int max_temp, int min_temp) {
+    setInterval([&](const std::string& mac_address, float max_temp, float min_temp) {
         std::string data = get_data(mac_address);
         if (data == "F") {
             std::cerr << "Trying To Connect To The Sensor..." << std::endl;
@@ -38,23 +38,29 @@ int main(int argc, char *argv[]) {
         std::cout << std::endl;
 
         if (max_temp > values.getTemperature() && values.getTemperature() > min_temp) {
+	    gpioWrite(25, 0);
             gpioWrite(17, 0);
             gpioWrite(18, 0);
             gpioWrite(4, 1);
         }
 
-        if (max_temp < values.getTemperature()) {
+        else if(max_temp< values.getTemperature()) {
+	    
+	    gpioWrite(25, 1);
             gpioWrite(4, 0);
             gpioWrite(18, 0);
             gpioWrite(17, 1);
         }
 	
-        if (min_temp > values.getTemperature()) {
-            gpioWrite(4, 0);
+	else {
+	    
+	    gpioWrite(25, 1);
+	    gpioWrite(4, 0);
             gpioWrite(17, 0);
             gpioWrite(18, 1);
         }
     }, mac_address, max_temp, min_temp, intervalInSeconds);
+
 
     // Cleanup pigpio
     gpioTerminate();

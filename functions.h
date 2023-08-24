@@ -13,6 +13,13 @@
 #include <pigpio.h>
 bool keepRunning = true;
 
+
+void turnOffPins() {
+    gpioWrite(17, 0); // Turn off LED on GPIO 17
+    gpioWrite(18, 0); // Turn off LED on GPIO 18
+    gpioWrite(4, 0);  // Turn off LED on GPIO 4
+}
+
 // Function to validate MAC address using regular expression
 inline bool isValidMacAddress(const std::string &mac) {
     // Regular expression pattern for a valid MAC address
