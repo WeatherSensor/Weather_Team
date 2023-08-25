@@ -3,20 +3,22 @@
 #include "functions.h"
 
 int main(int argc, char *argv[]) {
-    // Check if there are enough command-line arguments
-    if (argc != 3 || std::string(argv[1]) != "-m") {
-        std::cerr << "Usage: " << argv[0] << " -m \"mac address\"" << std::endl;
+    if (argc < 5) {
+        std::cerr << "Usage: " << argv[0] << " -m \"mac_address\" <max_temp> <min_temp>" << std::endl;
         return -1;
     }
 
-    std::string mac_address = argv[2]; // Get the MAC address from command-line argument
+    std::string mac_address = argv[2];
+    int max_temp_size = std::stoi(argv[3]);
+    int min_temp_size = std::stoi(argv[4]);
+    int intervalInSeconds = 20; // Set the interval value as needed
 
-	//signal(SIGINT, SIG_IGN);
-	signal(SIGTSTP, SIG_IGN);
-    // Start the interval function with a 5-second interval
-    setInterval([&mac_address]() {
-            retrieveAndPrintData(mac_address);
-            }, 20);
+    //signal(SIGINT, SIG_IGN); // Ignore the SIGINT signal
+    signal(SIGTSTP, SIG_IGN); // Ignore the SIGTSTP signal
+
+    setInterval([&](const std::string& mac_address, int max_temp, int min_temp) {
+        retrieveAndPrintData(mac_address, max_temp, min_temp);
+    }, mac_address, intervalInSeconds, max_temp_size, min_temp_size);
 
     return 0;
 }
