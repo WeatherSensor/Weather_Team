@@ -11,14 +11,20 @@
 #include <string>
 #include <pigpio.h>
 
+
+bool IntervalCheck = true;
 bool keepRunning = true;
 
 inline void handleSignal(int signum) {
-	if (signum == SIGTSTP) {
-		std::cout << std::endl << "Ctrl+Z pressed. Cleaning up and terminating..." << std::endl;
+	if (signum == SIGTSTP && gpioRead(25) == 1) {
+		std::cout << std::endl << "Ctrl+Z pressed. Buzzer is turning off ..." << std::endl;
 		gpioWrite(25, 0);
+	}
+	else if (signum == SIGINT){
+		std::cout << std::endl << "Ctrl+C pressed. Cleaning up..." << std::endl;
+		gpioWrite(25, 0);		
 		gpioWrite(17, 0);
-		gpioWrite(18, 0); 
+		gpioWrite(18, 0);
 		gpioWrite(4, 0);
 		gpioTerminate();
 		exit(0);
@@ -26,7 +32,8 @@ inline void handleSignal(int signum) {
 }
 
 
-inline void getInfo(const std::string& mac_address, const float max_temp, const float min_temp){
+
+inline void getInfo(const std::string& mac_address, const float max_temp, const float min_temp, const size_t IntervalSeconds){
 
 	std::string data = get_data(mac_address);
 	if (data == "F") {
@@ -48,6 +55,8 @@ inline void getInfo(const std::string& mac_address, const float max_temp, const 
 		gpioWrite(17, 0);
 		gpioWrite(18, 0);
 		gpioWrite(4, 1);
+		IntervalCheck = false;
+
 	}
 
 	else if(max_temp< values.getTemperature()) {
@@ -55,13 +64,16 @@ inline void getInfo(const std::string& mac_address, const float max_temp, const 
 		gpioWrite(4, 0);
 		gpioWrite(18, 0);
 		gpioWrite(25, 1);
-		while(true){
-			gpioDelay(300000);
+
+		for (int i = 0;i < IntervalSeconds;i++){
+			gpioDelay(500000);
 			gpioWrite(17, 1);
-			gpioDelay(300000);
+			gpioDelay(500000);
 			gpioWrite(17, 0);
 
 		}
+		gpioWrite(25, 0);
+		IntervalCheck = true;
 	}
 
 	else {
@@ -70,14 +82,18 @@ inline void getInfo(const std::string& mac_address, const float max_temp, const 
 		gpioWrite(4, 0);
 		gpioWrite(17, 0);
 
-		while(true){
-			gpioDelay(300000);
+		for (int i = 0;i < IntervalSeconds;i++){
+			gpioDelay(500000);
 			gpioWrite(18, 1);
-			gpioDelay(300000);
+			gpioDelay(500000);
 			gpioWrite(18, 0);
 
 		}
+		gpioWrite(25, 0);
+		IntervalCheck = true;
+
 	}
+
 }
 
 // Function to validate MAC address using regular expression
@@ -92,10 +108,11 @@ template <typename Callable>
 inline void setInterval(Callable func, const std::string& mac_address, int intervalInSeconds, int max_temp, int min_temp) {
 	while (keepRunning) {
 		// Call the provided function with the given arguments
-		func(mac_address, max_temp, min_temp);
-
-		// Wait for the specified interval
-		std::this_thread::sleep_for(std::chrono::seconds(intervalInSeconds));
+		func(mac_address, max_temp, min_temp, intervalInSeconds);
+	
+		if (IntervalCheck == false){	
+			std::this_thread::sleep_for(std::chrono::seconds(intervalInSeconds));
+		}
 	}
 }
 
