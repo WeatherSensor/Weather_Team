@@ -16,6 +16,10 @@ const int humidity_hex_start = 8;
 const int voltage_hex_start = 20;
 const int humidity_hex_length = 2;
 const int voltage_hex_length = 2;
-
+const size_t red_led_pin = 17;
+const size_t green_led_pin = 4;
+const size_t blue_led_pin = 18;
+const size_t buzzer_pin = 25;
+const size_t leds_blink_seconds = 500000;
 #endif
 
