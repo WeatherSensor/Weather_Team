@@ -21,5 +21,6 @@ const size_t green_led_pin = 4;
 const size_t blue_led_pin = 18;
 const size_t buzzer_pin = 25;
 const size_t leds_blink_seconds = 500000;
+const size_t cooler_pin = 12;
 #endif
 

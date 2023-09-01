@@ -26,6 +26,7 @@ inline void handleSignal(int signum) {
 		gpioWrite(red_led_pin, 0);
 		gpioWrite(blue_led_pin, 0);
 		gpioWrite(green_led_pin, 0);
+		gpioWrite(cooler_pin, 0);
 		gpioTerminate();
 		exit(0);
 	}
@@ -43,17 +44,16 @@ inline void getInfo(const std::string& mac_address, const float max_temp, const 
 	}
 
 	SensorData values(data);
-/*
 	std::cout << "Value: " << data;
 	std::cout << "Voltage: " << values.getVoltage() << "mV" << std::endl;
 	std::cout << "Humidity: " << values.getHumidity() << "%" << std::endl;
 	std::cout << "Temperature: " << values.getTemperature() << " degrees Celsius" << std::endl;
 	std::cout << std::endl;
-*/
 	if (max_temp > values.getTemperature() && values.getTemperature() > min_temp) {
 		gpioWrite(buzzer_pin, 0);
 		gpioWrite(red_led_pin, 0);
 		gpioWrite(blue_led_pin, 0);
+		gpioWrite(cooler_pin, 0);
 		gpioWrite(green_led_pin, 1);
 		IntervalCheck = false;
 
@@ -64,7 +64,7 @@ inline void getInfo(const std::string& mac_address, const float max_temp, const 
 		gpioWrite(green_led_pin, 0);
 		gpioWrite(blue_led_pin, 0);
 		gpioWrite(buzzer_pin, 1);
-
+		gpioWrite(cooler_pin, 1);
 		for (int i = 0;i < IntervalSeconds;i++){
 			gpioDelay(leds_blink_seconds);
 			gpioWrite(red_led_pin, 1);
@@ -73,12 +73,12 @@ inline void getInfo(const std::string& mac_address, const float max_temp, const 
 
 		}
 		gpioWrite(buzzer_pin, 0);
-
+		gpioWrite(cooler_pin, 0);
 		IntervalCheck = true;
 	}
 
 	else {
-
+		gpioWrite(cooler_pin, 0);
 		gpioWrite(buzzer_pin, 1);
 		gpioWrite(green_led_pin, 0);
 		gpioWrite(red_led_pin, 0);
